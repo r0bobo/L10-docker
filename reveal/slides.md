@@ -68,6 +68,96 @@ latest: digest: sha256:7deec43013ea79005c342b407e37f42061dc638351512ad6cfec3b754
 
 ---
 
+## How does docker work?
+
+***
+
+### Containers vs Virtual Machines
+
+<img class="plain" height="350px" src="images/container-vs-vm_container.png"/>
+<img class="plain" height="350px" src="images/container-vs-vm_vm.png"/>
+
+***
+
+### "There is no such thing as a docker container"
+
+***
+
+### Collection of multiple components:
+- Linux namespaces (processes, network, ipc, filesystem mounts, uts)
+- Linux cgroups (share and limit system resources)
+- Union file systems
+
+***
+
+### UnionFS
+
+Collection of layers that is merged.
+
+<img class="plain" height="450px" src="images/unionfs.png"/>
+
+***
+
+### Dockerfiles and layers
+
+```dockerfile
+FROM alpine               # Imports all alpine layers
+
+ENV VARIABLE=1
+
+RUN apk add --no-cache \  # Adds layer
+      gcc \
+      musl-devel
+
+WORKDIR /build
+
+COPY app.c .              # Adds layer
+
+RUN gcc app.c -o app      # Adds layer
+
+RUN rm /build/app.c       # Adds layer
+```
+
+***
+
+### Resulting layers
+
+```shell
+$ docker history mycontainer
+IMAGE         SIZE    CREATED        CREATED BY
+11ee288f5f19  0B      5 seconds ago  rm /build/app.c
+81dd9aa5cd37  10.6kB  6 seconds ago  gcc app.c -o app
+2325e01d7bb1  74B     7 seconds ago  #(nop) COPY file:d64b9f772e…
+4bf273c2caa0  0B      7 seconds ago  #(nop) WORKDIR /build
+69a543fbcef9  96.1MB  8 seconds ago  apk add --no-cache gcc musl…
+fb7b25d25519  0B      7 minutes ago  #(nop)  ENV VARIABLE=1
+3f53bb00af94  0B      4 weeks ago    #(nop)  CMD ["/bin/sh"]
+<missing>     4.41MB  4 weeks ago    #(nop) ADD file:2ff00caea4e…
+
+```
+
+***
+
+### Open Container Initiative
+
+- Runtime specification
+- Image specification
+- Registry specification
+
+***
+
+### Other container runtimes:
+
+- LXC/LXD
+- Cri-O
+- Podman
+- rkt
+- more ...
+
+
+
+---
+
 ## docker-compose
 
 so cool
