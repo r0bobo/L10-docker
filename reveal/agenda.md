@@ -18,4 +18,47 @@
 
 # Best practices for creating Dockerfiles (D)
 
-# Nomand cluster and consul demo (J/D)
+# Container clusters and Orchestration (J/D)
+
+Not using Kubernetes, why?:
+  - Only works with containers
+  - long learning curve
+  - complex to get started
+  - large amount of unneeded 'extras'
+
+### Consul
+
+##### Background
+- What is Consul? (It can be many things, but I use it mostly for Service discovery and health checking)
+  - Service discovery:
+    - A way of finding your applications if all you have is microservices or applications in a cluster.
+    - Useful for running many containers on nodes:
+      - no need to remember IP address and port for each
+      - applications can dynamically add themselves
+      - useful as DNS
+
+#### Health Checks
+    - Add a ping / curl / script to determine that application is up
+      - this can be used to remove / add it to a Loadbalancer
+
+Nomad:
+- What is Nomad?
+  - 'Easily deploy applications at any scale' - Tagline
+  - A single binary that schedules applications and services
+  - Plan changes, run applications, monitor deployments
+  - Use for A/B (or blue/green) deployments
+  - Rolling deployments
+  - Application orchestration:
+    - Can failover applications to other Nomad agents (if they exist) in the cluster
+    - New agents can share the load if added
+
+- Does this mean Nomad isn't as good?:
+  - No:
+    - If you don't care about following buzzwords
+    - If you need to scale and orchestrate applications of any kind
+    - If you don't want to mess with installations:
+      - single binary, remember?
+    - If you want to have most of the same K8s features, without the learning curve
+  - Yes:
+    - If your job requires K8s
+    - If you want autoscaling of jobs (Nomad cannot (0.8.7) do this yet)
