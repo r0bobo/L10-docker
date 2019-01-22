@@ -1,0 +1,22 @@
+log_level = "DEBUG"
+data_dir = "/tmp/{{ inventory_hostname }}/nomad"
+
+name = "{{ inventory_hostname }}"
+
+{% if inventory_hostname in groups['server'] %}
+server {
+  enabled = true
+  bootstrap_expect = {{ groups['server'] | length }}
+}
+{% endif %}
+
+{% if inventory_hostname in groups['agents'] %}
+client {
+  enabled = true
+  servers = ["127.0.0.1"]
+}
+
+ports {
+    http = {{ range(1234, 2468) | random }}
+}
+{% endif %}

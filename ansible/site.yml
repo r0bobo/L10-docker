@@ -1,0 +1,38 @@
+---
+
+  - name: 'Configure Nomad and Consul cluster'
+    hosts: all
+    become: true
+
+    tasks:
+
+      - name: 'Ensure directories are present'
+        file:
+          state: directory
+          path:  "/tmp/{{ inventory_hostname }}/{{ item }}"
+        loop:
+          - consul
+          - nomad
+
+      - name: 'Ensure templates are configured'
+        template:
+          src:  "templates/{{ item }}/{{ item }}.hcl.j2"
+          dest: "/tmp/{{ inventory_hostname }}/{{ item }}/{{ item }}.hcl"
+        loop:
+          - consul
+          - nomad
+
+      - name: 'Ensure jobs are configured on Server'
+        template:
+          src:  "templates/nomad/jobs/{{ item }}.nomad.j2"
+          dest: '/tmp/{{ inventory_hostname }}/nomad/{{ item }}.nomad'
+        loop:
+          - ghost
+        when: inventory_hostname in groups['server']
+
+      # - name: 'Run consul on server applications'
+      #   shell: "consul agent -config-dir /tmp/{{ inventory_hostname }}/consul/consul.hcl >/dev/null 2>&1 &"
+      #   delegate_to: server1
+
+      - name: 'Run Nomad'
+        shell: "nomad agent -config /tmp/{{ inventory_hostname }}/nomad/nomad.hcl >/dev/null 2>&1 &"

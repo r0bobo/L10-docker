@@ -1,0 +1,5 @@
+[agents]
+agent[1:4] ansible_connection=local
+
+[server]
+server1 ansible_connection=local

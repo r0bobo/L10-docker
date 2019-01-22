@@ -1,0 +1,11 @@
+{
+    "bootstrap": {% if inventory_hostname in groups['server'] %}true{% else %}false{% endif %},
+    "server": {% if inventory_hostname in groups['server'] %}true{% else %}false{% endif %},
+    "datacenter": "dc1",
+    "data_dir": "/tmp/{{ inventory_hostname }}/consul",
+    "log_level": "INFO",
+    "enable_syslog": true,
+    "start_join": ["127.0.0.1"],
+    "bind_addr": "127.0.0.1",
+    "ui": {% if inventory_hostname in groups['server'] %}true{% else %}false{% endif %},
+}
