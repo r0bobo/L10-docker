@@ -44,11 +44,11 @@ Images are built once, shared to a container registry and then run in exactly th
 
 ***
 
-## Demo
+### Demo
 
 ***
 
-## Dockerfile
+### Dockerfile
 
 ```dockerfile
 # Container base image
@@ -72,18 +72,18 @@ CMD ["app.js"]
 
 ***
 
-## Uploading to a container registry
+### Uploading to a container registry
 (docker hub in this case)
 
 ```sh
 $ docker login
 
-$ docker build myapp .
+$ docker build --tag myapp .
 
-$ docker tag myapp 0.0.0.0:5000/myapp:v1.0
+$ docker tag myapp jbjorkang/myapp
 
-$ docker push myapp
-The push refers to repository [0.0.0.0:5000/newapp]
+$ docker push --tag myapp
+The push refers to repository [docker.io/jbjorkang/myapp]
 d0ee75f51314: Layer already exists
 7bff100f35cb: Layer already exists
 latest: digest: sha256:7deec43013ea79005c342b407e37f42061dc638351512ad6cfec3b754a48a023 size: 739
@@ -92,7 +92,7 @@ latest: digest: sha256:7deec43013ea79005c342b407e37f42061dc638351512ad6cfec3b754
 
 ***
 
-## Exercise 2
+### Exercise 2
 
 Build a container, upload it to Docker hub and let someone else run it.
 
@@ -164,6 +164,13 @@ fb7b25d25519  0B      7 minutes ago  #(nop)  ENV VARIABLE=1
 3f53bb00af94  0B      4 weeks ago    #(nop)  CMD ["/bin/sh"]
 <missing>     4.41MB  4 weeks ago    #(nop) ADD file:2ff00caea4e…
 ```
+
+***
+
+### Runtime layer
+
+- Runtime changes stored in layer on top of image
+- Discarded when container stops
 
 ***
 
