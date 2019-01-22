@@ -11,47 +11,69 @@ revealOptions:
 
 ---
 
-## What is Docker?
+## 1. What is Docker?
 
 ***
 
-- Package software
+### Packaged software
+Collect everything in one package
 
 ***
 
-- Immutable distribution
+### Isolated dependencies
+Packages and depencies do not depend on the OS
 
+***
+
+### Immutable distribution 
+Runs the same on any system
 
 ---
 
+## 2. How to run Docker containers
 
-# Creating images
+***
+
+## Exercise 1
+
+---
+
+## 3. Creating images
+
+Images are built once, shared to a container registry and then run in exactly the state they were built.
+
+***
+
+## Demo
 
 ***
 
 ## Dockerfile
 
 ```dockerfile
-FROM node:alpine  # Container base image
+# Container base image
+FROM node:alpine
 
 WORKDIR /app/
-COPY app.js package.json ./  # Copy files into container
-RUN npm install  # Execute command in container build
+# Copy files into container
+COPY app.js package.json ./
+
+# Execute command in container build
+RUN npm install
 
 # What to run when finished container will be started
-ENTRYPOINT ["node", "app.js"]
+ENTRYPOINT ["node"]
+
+# What arguments to pass to ENTRYPOINT
+# This is what will be overridden with the arguments after:
+# `docker run <image>`
+CMD ["app.js"]
 ```
 
 ***
 
-```sh
-.
-├── app.js
-├── Dockerfile
-└── package.json
-```
-
-***
+## Uploading to a container registry
+(docker hub in this case)
 
 ```sh
 $ docker build myapp .
@@ -66,9 +88,15 @@ latest: digest: sha256:7deec43013ea79005c342b407e37f42061dc638351512ad6cfec3b754
 
 ```
 
+***
+
+## Exercise 2
+
+Build a container, upload it to Docker hub and let someone else run it.
+
 ---
 
-## How does docker work?
+## 4. How does docker work?
 
 ***
 
@@ -79,7 +107,7 @@ latest: digest: sha256:7deec43013ea79005c342b407e37f42061dc638351512ad6cfec3b754
 
 ***
 
-### "There is no such thing as a docker container"
+> "There is no such thing as a docker container"
 
 ***
 
@@ -133,7 +161,6 @@ IMAGE         SIZE    CREATED        CREATED BY
 fb7b25d25519  0B      7 minutes ago  #(nop)  ENV VARIABLE=1
 3f53bb00af94  0B      4 weeks ago    #(nop)  CMD ["/bin/sh"]
 <missing>     4.41MB  4 weeks ago    #(nop) ADD file:2ff00caea4e…
-
 ```
 
 ***
@@ -154,11 +181,9 @@ fb7b25d25519  0B      7 minutes ago  #(nop)  ENV VARIABLE=1
 - rkt
 - more ...
 
-
-
 ---
 
-## docker-compose
+## 5. docker-compose
 
 so cool
 
@@ -178,6 +203,10 @@ services:
 volumes:
   data:
 ```
+
+***
+
+## Exercise 3
 
 ---
 
