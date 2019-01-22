@@ -76,6 +76,8 @@ CMD ["app.js"]
 (docker hub in this case)
 
 ```sh
+$ docker login
+
 $ docker build myapp .
 
 $ docker tag myapp 0.0.0.0:5000/myapp:v1.0

@@ -7,7 +7,7 @@ WORKDIR /build
 
 COPY main.go go.mod ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build
+RUN go build
 
 
 ####
@@ -20,3 +20,4 @@ ENV LISTEN_PORT=80
 COPY --from=builder /build/app /usr/bin/app
 
 CMD ["/usr/bin/app"]
+
