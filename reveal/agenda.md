@@ -1,6 +1,4 @@
 # What is Docker (J)
-- Package
-- Distribute
 
 # How to run containers (J)
 
@@ -13,6 +11,11 @@
 # How does Docker work (J/D)
 
 # Docker compose (J)
+
+So up until now we have been running containers with the CLI. Which works, but if we've got a number of them, with different settings, we don't want to copy and paste commands, rebuild our images, modify our configuration files, etc..
+
+Let's move away from CLI commands, and configure it with some YAML, cuz who don't love YAML?
+
 
 # Exercise 3 (J)
 
@@ -62,3 +65,8 @@ Nomad:
   - Yes:
     - If your job requires K8s
     - If you want autoscaling of jobs (Nomad cannot (0.8.7) do this yet)
+
+Nomad commands:
+  - nomad job plan x
+  - nomad job run x
+  - nomad job stop x

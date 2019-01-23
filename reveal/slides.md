@@ -12,21 +12,49 @@ revealOptions:
 ---
 
 ## 1. What is Docker?
+__Let's start easy__
 
 ***
 
-### Packaged software
-Collect everything in one package
+Docker is an application that lets you run software packages that can contain all of your tools, libraries, configuration files, and helper applications.
+
+***
+It is developed predominantly for Linux, but can also be run on macOS and Windows.
 
 ***
 
-### Isolated dependencies
-Packages and depencies do not depend on the OS
+The technology in use is a kind of __Operating System Level Virtualisation__, which is different to __Hardware Level Virtualisation__
 
 ***
 
-### Immutable distribution 
-Runs the same on any system
+**OS Level:** Docker, FreeBSD Jails, Solaris Containers, rkt
+
+**Hardware Level:** VirtualBox, VMWare, KVM
+***
+_TL;DR Docker containers requires a host OS to run on_
+
+***
+
+This means containers are meant to be super small, nimble and portable. Without being made into full-blown VMs.
+
+***
+
+### Uses
+- Packaging applications for deployment to environments
+- Building a development environment per tool (Python with all your requirements)
+- Sharing fully packaged applications between people
+***
+
+An application running with Docker is called a 'container', with the multiple being 'containers'
+
+(_not 'Dockers' 'cuz that's a brand of khaki trousers_)
+***
+
+Images are the format that Docker uses to distribute applications. Your requirements, being your tools, libraries and so on, are packaged into an image.
+
+***
+
+Alright, so how do I use it?
 
 ---
 
@@ -35,6 +63,18 @@ Runs the same on any system
 ***
 
 ## Exercise 1
+
+What better way to get going, than to have you do it?
+
+```
+  $ docker run --name nginx -p 80:80 nginx
+  $ docker ps -a
+  $ docker images -a
+  $ docker inspect nginx
+  $ docker stop nginx
+  $ docker system prune -f -a
+
+```
 
 ---
 
@@ -192,40 +232,100 @@ fb7b25d25519  0B      7 minutes ago  #(nop)  ENV VARIABLE=1
 
 ---
 
-## 5. docker-compose
+## 5. Docker Compose
 
-so cool
+***
+YAML for everyone!
+***
+
+So we _could_ run a series of _docker run_ commands to run our containers, or we could create a long shell or Python script to do it, but as luck would have it..
+***
+
+
+There's an even nicer way that Docker built:
 
 ```yml
-version: '3'
+version: '2'
 
 services:
 
-  registry:
-    image: registry
-    ports:
-      - 5000:5000
+  elasticsearch:
+    build:
+      context: elasticsearch/
+      args:
+        ELK_VERSION: $ELK_VERSION
     volumes:
-      - data:/var/lib/registry
-      - ./config.yml:/etc/docker/registry/config.yml
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
 
-volumes:
-  data:
+  logstash:
+    build:
+      context: logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    build:
+      context: kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config:ro
+    ports:
+      - "5601:5601"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+networks:
+
+  elk:
+    driver: bridge
+
 ```
+***
+
+That example creates:
+- networks
+- images
+- adds volumes (from the local disk)
+- containers
+
+and links them all together.
 
 ***
 
 ## Exercise 3
+_(More of a demo really)_
 
 ---
 
-## Container orchestration
+## 6. Container orchestration
 
 ***
 
 Now that we have built our Docker configurations, and decided what we are going to run. Let's go straight to prod!
 
-All is gonna be great, right? Docker solves everything!
+All is gonna be great, right? Docker and Docker-compose solves everything!
 
 ***
 
@@ -240,12 +340,20 @@ $ ssh server
 $ docker restart container
 
 ```
+or
+
+```
+$ docker-compose up -d
+```
 
 'cuz that's what we do, right?
 ***
 
-- Alright, but what if I had a Loadbalancer with multiple servers looking after my containers?
-- Sure, but what if they fail?
+## Nah.
+
+_"Alright, but what if I had a Loadbalancer with multiple servers looking after my containers?"_
+
+_"Sure, but what if they fail?"_
 
 
 ***
@@ -274,6 +382,10 @@ But we are going to use something!
 
 ***
 
+<img class="plain"  src="images/nomad.png"/>
+
+***
+
 We are going to use **Consul** and **Nomad** to look after our applications
 (Notice I say applications, not _containers_)
 
@@ -283,6 +395,11 @@ What! What?
 
 ***
 
+You may have heard of a small company called Hashicorp?
+<img class="plain"  src="images/hashicorp.png"/>
+
+
+***
 ### Consul for 'Service Discovery'
 
 <img class="plain" src="https://www.datocms-assets.com/2885/1526066558-image-4.png?fit=max&fm=png&q=80&w=2500"/>
@@ -295,4 +412,8 @@ What! What?
 
 ***
 
-### Demo 
+### Demo
+
+***
+
+## Q&A
