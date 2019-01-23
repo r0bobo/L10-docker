@@ -230,6 +230,30 @@ fb7b25d25519  0B      7 minutes ago  #(nop)  ENV VARIABLE=1
 - rkt
 - more ...
 
+***
+
+### What does the future hold for containers?
+
+***
+
+### Virtual machines!
+
+***
+
+### Multi tenancy and isolation
+
+Container isolation is (probably) not be good enough to trust multiple customers, systems, etc on on the same nodes.
+
+***
+
+### Micro-VMs
+
+Thin virtualization. (Firecracker has 5MB memory overhead and 125ms startup time)
+
+- Firecracker (Amazon Lambda)
+- Kata containers
+- gVisor
+
 ---
 
 ## 5. Docker Compose
