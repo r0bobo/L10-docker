@@ -69,4 +69,16 @@ Nomad:
 Nomad commands:
   - nomad job plan x
   - nomad job run x
+  - nomad status x
+
+Display and Change the job file:
+  - nomad job plan x
+  - nomad job run x
+
+Note the canary:
+  - nomad deployment promote x
+  - nomad status x
+  - nomad deployment fail x
+
+Kill a node and monitor in web ui
   - nomad job stop x

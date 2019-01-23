@@ -3,8 +3,12 @@ job "ghost" {
   type = "service"
 
   update {
-    stagger      = "30s"
+    stagger      = "10s"
     max_parallel = 1
+    min_healthy_time = "10s"
+    auto_revert = true
+    canary = 1
+
   }
 
   group "ghost" {
