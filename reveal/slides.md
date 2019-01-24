@@ -9,6 +9,11 @@ revealOptions:
 
 <img class="plain"  src="https://www.docker.com/sites/default/files/social/docker_facebook_share.png"/>
 
+Waiting? Check these out!
+
+- https://github.com/veggiemonk/awesome-docker
+- https://blog.jessfraz.com/post/docker-containers-on-the-desktop/
+
 ---
 
 github.com/r0bobo/L10-docker
